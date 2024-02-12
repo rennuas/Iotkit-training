@@ -14,19 +14,27 @@ function onConnect() {
     // Once a connection has been made, make a subscription and send a message.
     console.log("onConnect");
     console.log(`id: clientId-${id}`);
-    client.subscribe("module_2/buzzer");
+    client.subscribe("module_3/led/#");
 
-    document.getElementById("module2SwitchOn").addEventListener("click", function() {
+    let switchsOn = document.querySelectorAll(".btnOn");
+
+    switchsOn.forEach(function(button, i){
+      button.addEventListener("click", function(){
         message = new Paho.MQTT.Message("1");
-        message.destinationName = "module_2/buzzer";
+        message.destinationName = `module_3/led/${i+1}`;
         client.send(message); 
-    });
-    
-    document.getElementById("module2SwitchOff").addEventListener("click", function() {
+      })
+    })
+
+    let switchsOff = document.querySelectorAll(".btnOff");
+
+    switchsOff.forEach(function(button, i){
+      button.addEventListener("click", function(){
         message = new Paho.MQTT.Message("0");
-        message.destinationName = "module_2/buzzer";
+        message.destinationName = `module_3/led/${i+1}`;
         client.send(message); 
-    });
+      })
+    })
 
     let connectionStatusIcon = document.querySelector("#connectionStatus i");
     connectionStatusIcon.classList.add("text-success");
@@ -52,18 +60,21 @@ function onConnectionLost(responseObject) {
 function onMessageArrived(message) {
   console.log("onMessageArrived:"+message.payloadString);
 
-  if(message.destinationName == "module_2/buzzer"){
-    if(message.payloadString == "1"){
-        let buzzerOffStat = document.getElementById("buzzerOffStat");
-        buzzerOffStat.classList.add("visually-hidden");
-        let buzzerOnStat = document.getElementById("buzzerOnStat");
-        buzzerOnStat.classList.remove("visually-hidden");
-    }else {
-        let buzzerOnStat = document.getElementById("buzzerOnStat");
-        buzzerOnStat.classList.add("visually-hidden");
-        let buzzerOffStat = document.getElementById("buzzerOffStat");
-        buzzerOffStat.classList.remove("visually-hidden");
+  for (let i = 1; i <= 10; i++) {
+    if(message.destinationName == `module_3/led/${i}`){
+      if(message.payloadString == "1"){
+          let ledOffStat = document.getElementById(`ledOffStat${i}`);
+          ledOffStat.classList.add("visually-hidden");
+          let ledOnStat = document.getElementById(`ledOnStat${i}`);
+          ledOnStat.classList.remove("visually-hidden");
+      }else {
+          let ledOnStat = document.getElementById(`ledOnStat${i}`);
+          ledOnStat.classList.add("visually-hidden");
+          let ledOffStat = document.getElementById(`ledOffStat${i}`);
+          ledOffStat.classList.remove("visually-hidden");
+      }
     }
   }
+  
 }
 

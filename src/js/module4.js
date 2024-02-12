@@ -14,17 +14,17 @@ function onConnect() {
     // Once a connection has been made, make a subscription and send a message.
     console.log("onConnect");
     console.log(`id: clientId-${id}`);
-    client.subscribe("module_2/buzzer");
+    client.subscribe("module_4/servo");
 
-    document.getElementById("module2SwitchOn").addEventListener("click", function() {
+    document.getElementById("switchOn").addEventListener("click", function() {
         message = new Paho.MQTT.Message("1");
-        message.destinationName = "module_2/buzzer";
+        message.destinationName = "module_4/servo";
         client.send(message); 
     });
     
-    document.getElementById("module2SwitchOff").addEventListener("click", function() {
+    document.getElementById("switchOff").addEventListener("click", function() {
         message = new Paho.MQTT.Message("0");
-        message.destinationName = "module_2/buzzer";
+        message.destinationName = "module_4/servo";
         client.send(message); 
     });
 
@@ -52,17 +52,17 @@ function onConnectionLost(responseObject) {
 function onMessageArrived(message) {
   console.log("onMessageArrived:"+message.payloadString);
 
-  if(message.destinationName == "module_2/buzzer"){
+  if(message.destinationName == "module_4/servo"){
     if(message.payloadString == "1"){
-        let buzzerOffStat = document.getElementById("buzzerOffStat");
-        buzzerOffStat.classList.add("visually-hidden");
-        let buzzerOnStat = document.getElementById("buzzerOnStat");
-        buzzerOnStat.classList.remove("visually-hidden");
+        let servoOffStat = document.getElementById("servoOffStat");
+        servoOffStat.classList.add("visually-hidden");
+        let servoOnStat = document.getElementById("servoOnStat");
+        servoOnStat.classList.remove("visually-hidden");
     }else {
-        let buzzerOnStat = document.getElementById("buzzerOnStat");
-        buzzerOnStat.classList.add("visually-hidden");
-        let buzzerOffStat = document.getElementById("buzzerOffStat");
-        buzzerOffStat.classList.remove("visually-hidden");
+        let servoOnStat = document.getElementById("servoOnStat");
+        servoOnStat.classList.add("visually-hidden");
+        let servoOffStat = document.getElementById("servoOffStat");
+        servoOffStat.classList.remove("visually-hidden");
     }
   }
 }

@@ -1,6 +1,6 @@
 // Create a client instance
 const id= Math.random();
-client = new Paho.MQTT.Client('a42a0cedeea647cb99d5cb2023cbb3f4.s1.eu.hivemq.cloud', Number(8884), "clientId-" + id);
+client = new Paho.MQTT.Client('6315efe699464371a7a7ca7423114c9a.s2.eu.hivemq.cloud', Number(8884), "clientId-" + id);
 
 // set callback handlers
 client.onConnectionLost = onConnectionLost;

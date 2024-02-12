@@ -14,19 +14,7 @@ function onConnect() {
     // Once a connection has been made, make a subscription and send a message.
     console.log("onConnect");
     console.log(`id: clientId-${id}`);
-    client.subscribe("module_2/buzzer");
-
-    document.getElementById("module2SwitchOn").addEventListener("click", function() {
-        message = new Paho.MQTT.Message("1");
-        message.destinationName = "module_2/buzzer";
-        client.send(message); 
-    });
-    
-    document.getElementById("module2SwitchOff").addEventListener("click", function() {
-        message = new Paho.MQTT.Message("0");
-        message.destinationName = "module_2/buzzer";
-        client.send(message); 
-    });
+    client.subscribe("module_6/relay");
 
     let connectionStatusIcon = document.querySelector("#connectionStatus i");
     connectionStatusIcon.classList.add("text-success");
@@ -52,17 +40,27 @@ function onConnectionLost(responseObject) {
 function onMessageArrived(message) {
   console.log("onMessageArrived:"+message.payloadString);
 
-  if(message.destinationName == "module_2/buzzer"){
-    if(message.payloadString == "1"){
-        let buzzerOffStat = document.getElementById("buzzerOffStat");
-        buzzerOffStat.classList.add("visually-hidden");
-        let buzzerOnStat = document.getElementById("buzzerOnStat");
-        buzzerOnStat.classList.remove("visually-hidden");
+  if(message.destinationName == "module_6/relay"){
+    if(message.payloadString == "0"){
+        let lampOffStat = document.getElementById("lampOffStat");
+        lampOffStat.classList.add("visually-hidden");
+        let lampOnStat = document.getElementById("lampOnStat");
+        lampOnStat.classList.remove("visually-hidden");
+
+        let sensorOffStat = document.getElementById("sensorOffStat");
+        sensorOffStat.classList.add("visually-hidden");
+        let sensorOnStat = document.getElementById("sensorOnStat");
+        sensorOnStat.classList.remove("visually-hidden");
     }else {
-        let buzzerOnStat = document.getElementById("buzzerOnStat");
-        buzzerOnStat.classList.add("visually-hidden");
-        let buzzerOffStat = document.getElementById("buzzerOffStat");
-        buzzerOffStat.classList.remove("visually-hidden");
+        let lampOnStat = document.getElementById("lampOnStat");
+        lampOnStat.classList.add("visually-hidden");
+        let lampOffStat = document.getElementById("lampOffStat");
+        lampOffStat.classList.remove("visually-hidden");
+
+        let sensorOnStat = document.getElementById("sensorOnStat");
+        sensorOnStat.classList.add("visually-hidden");
+        let sensorOffStat = document.getElementById("sensorOffStat");
+        sensorOffStat.classList.remove("visually-hidden");
     }
   }
 }

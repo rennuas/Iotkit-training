@@ -14,19 +14,7 @@ function onConnect() {
     // Once a connection has been made, make a subscription and send a message.
     console.log("onConnect");
     console.log(`id: clientId-${id}`);
-    client.subscribe("module_2/buzzer");
-
-    document.getElementById("module2SwitchOn").addEventListener("click", function() {
-        message = new Paho.MQTT.Message("1");
-        message.destinationName = "module_2/buzzer";
-        client.send(message); 
-    });
-    
-    document.getElementById("module2SwitchOff").addEventListener("click", function() {
-        message = new Paho.MQTT.Message("0");
-        message.destinationName = "module_2/buzzer";
-        client.send(message); 
-    });
+    client.subscribe("module_8/volume");
 
     let connectionStatusIcon = document.querySelector("#connectionStatus i");
     connectionStatusIcon.classList.add("text-success");
@@ -52,18 +40,28 @@ function onConnectionLost(responseObject) {
 function onMessageArrived(message) {
   console.log("onMessageArrived:"+message.payloadString);
 
-  if(message.destinationName == "module_2/buzzer"){
-    if(message.payloadString == "1"){
-        let buzzerOffStat = document.getElementById("buzzerOffStat");
-        buzzerOffStat.classList.add("visually-hidden");
-        let buzzerOnStat = document.getElementById("buzzerOnStat");
-        buzzerOnStat.classList.remove("visually-hidden");
-    }else {
-        let buzzerOnStat = document.getElementById("buzzerOnStat");
-        buzzerOnStat.classList.add("visually-hidden");
-        let buzzerOffStat = document.getElementById("buzzerOffStat");
-        buzzerOffStat.classList.remove("visually-hidden");
-    }
+  if(message.destinationName == "module_8/volume"){
+    updateGauge(parseInt(message.payloadString));
   }
 }
 
+// Configuration options for the gauge
+var gaugeOptions = {
+    id: "gauge-container", // Element ID
+    value: 0,   // Initial value
+    min: 0,      // Minimum value
+    max: 100,    // Maximum value
+    label: "Volume",       // Label
+    labelFontColor: "#333",
+    gaugeWidthScale: 1.5,  // Width of the gauge
+    counter: true,         // Show or hide the counter
+    levelColors: ["#ff0000", "#ffa500", "#00ff00"], // Colors for different levels
+  };
+
+  // Create the gauge
+  var gauge = new JustGage(gaugeOptions);
+
+  // Update the gauge value (you can do this dynamically)
+  function updateGauge(newValue) {
+    gauge.refresh(newValue);
+  }
